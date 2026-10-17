@@ -1,25 +1,54 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Pokédex — Bootcamp II</title>
- <link rel="stylesheet" href="style.css"> <!-- caminho relativo, sem barra inicial! -->
-</head>
-<body>
- <header>
- <h1>Pokédex</h1>
- <p>Busque um Pokémon pelo nome ou número</p>
- </header>
- <main>
- <section class="busca">
- <input type="text" id="campo-busca" placeholder="Ex.: pikachu ou 25">
- <button id="botao-buscar">Buscar</button>
- </section>
- <section id="resultado"></section> <!-- o JS vai preencher aqui -->
- </main>
- <footer>Dados: PokeAPI (pokeapi.co) · Projeto da disciplina Bootcamp II</footer>
- <script src="script.js"></script>
-<!-- no fim do body: o HTML já existe quando o JS roda -->
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pokédex — Bootcamp II</title>
+        <link rel="stylesheet" href="style.css"> <!-- caminho relativo, sem barra inicial! -->
+    </head>
+    <body>
+        <header>
+            <h1>Pokédex</h1>
+            <p>Busque um Pokémon pelo nome ou número</p>
+        </header>
+        <main>
+            <section class="busca">
+                <input type="text" id="campo-busca" placeholder="Ex.: pikachu ou 25">
+                <button id="botao-buscar">Buscar</button>
+            </section>
+            <section class="salvar-favorito">
+                <button id="botao-salvar">Salvar</button>
+            </section>
+            <section id="resultado"></section> <!-- o JS vai preencher aqui -->
+            <section class="favoritos">
+                <h2>Meus favoritos</h2>
+                <div id="lista-favoritos"></div>
+            </section>
+        </main>
+        <footer>Dados: PokeAPI (pokeapi.co) · Projeto da disciplina Bootcamp II</footer>
+        <script type="module">
+            import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+            const supabase = createClient("https://veincsmsiimkjhdoupmh.supabase.co", "sb_publishable_J5WW6wRZItHKef0YM9A_yQ_y364Jvep");
+
+            // CREATE — salvar um favorito
+            async function salvarFavorito(nome, extra) {
+                const { error } = await supabase.from("favoritos").insert({ nome_item: nome, dados_extra: extra });
+                if (error) console.error(error);
+            }
+
+            // READ — listar favoritos
+            async function listarFavoritos() {
+                const { data, error } = await supabase.from("favoritos").select("*").order("criado_em");
+                if (!error) renderizarLista(data);   // funcao sua, que desenha na tela
+            }
+
+            // DELETE — remover um favorito
+            async function removerFavorito(id) {
+                await supabase.from("favoritos").delete().eq("id", id);
+                listarFavoritos();
+            }
+        </script>
+        <script src="script.js"></script>
+        <!-- no fim do body: o HTML já existe quando o JS roda -->
+    </body>
 </html>
