@@ -16,9 +16,6 @@
                 <input type="text" id="campo-busca" placeholder="Ex.: pikachu ou 25">
                 <button id="botao-buscar">Buscar</button>
             </section>
-            <section class="salvar-favorito">
-                <button id="botao-salvar">Salvar</button>
-            </section>
             <section id="resultado"></section> <!-- o JS vai preencher aqui -->
             <section class="favoritos">
                 <h2>Meus favoritos</h2>
@@ -29,7 +26,7 @@
         <script type="module">
             import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
             const supabase = createClient("https://veincsmsiimkjhdoupmh.supabase.co", "sb_publishable_J5WW6wRZItHKef0YM9A_yQ_y364Jvep");
-
+                        
             // CREATE — salvar um favorito
             async function salvarFavorito(nome, extra) {
                 const { error } = await supabase.from("favoritos").insert({ nome_item: nome, dados_extra: extra });
@@ -48,6 +45,7 @@
                 listarFavoritos();
             }
         </script>
+        <script src="config.js"></script>
         <script src="script.js"></script>
         <!-- no fim do body: o HTML já existe quando o JS roda -->
     </body>
